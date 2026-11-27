@@ -6,7 +6,7 @@
 \title{Download legal-district boundaries from VWorld}
 \usage{
 admb_vworld(
-  level = c("sido", "sigungu", "emd", "ri"),
+  level = NULL,
   code = NULL,
   key = admb_get_vworld_key(),
   domain = "",
@@ -20,10 +20,12 @@ admb_vworld_shp(level, path, ...)
 }
 \arguments{
 \item{level}{경계 단위. \code{"sido"}(시도), \code{"sigungu"}(시군구),
-\code{"emd"}(읍면동), \code{"ri"}(리) 중 하나. \code{\link[=admb_layers]{admb_layers()}} 참고.}
+\code{"emd"}(읍면동), \code{"ri"}(리) 중 하나. \code{\link[=admb_layers]{admb_layers()}} 참고.
+\code{NULL}(기본값)이면 선택창으로 고른다.}
 
 \item{code}{법정동 코드 앞자리(숫자 문자열). 주면 그 코드로 시작하는
-구역만 받는다. 예: \code{"11"} 서울, \code{"41135"} 성남시 분당구. \code{NULL} 이면 전국.}
+구역만 받는다. 예: \code{"11"} 서울, \code{"41135"} 성남시 분당구. \code{NULL} 이면 전국.
+\code{\link[=admb_codes]{admb_codes()}} 로 코드를 찾을 수 있다.}
 
 \item{key}{브이월드 인증키. 기본값은 \code{\link[=admb_get_vworld_key]{admb_get_vworld_key()}}.}
 
@@ -45,8 +47,8 @@ admb_vworld_shp(level, path, ...)
 \value{
 \code{admb_vworld()} 는 \code{sf} 객체. 구역 코드 컬럼(\code{ctprvn_cd},
 \code{sig_cd}, \code{emd_cd}, \code{li_cd} 중 하나)과 한글·영문 이름을 담는다.
-해당 구역이 없으면 \code{NULL}. \code{admb_vworld_shp()} 는 같은 객체를
-보이지 않게 반환한다.
+해당 구역이 없거나 선택창에서 취소하면 \code{NULL}. 선택창으로 받은
+결과와 \code{admb_vworld_shp()} 의 결과는 보이지 않게 반환한다.
 }
 \description{
 Fetches boundary polygons from the VWorld WFS service
@@ -54,6 +56,11 @@ Fetches boundary polygons from the VWorld WFS service
 them as an \code{sf} object. \code{admb_vworld_shp()} also writes a shapefile.
 }
 \details{
+\code{level} 없이 \code{admb_vworld()} 만 실행하면 선택창이 차례로 뜬다:
+\strong{경계 종류}(시도·시군구·읍면동·리) → \strong{시·도}(전국 또는 하나) →
+\strong{시·군·구}(전체 또는 하나) → \strong{저장 방식}(R 객체만 / SHP 파일로도 저장).
+\code{level} 을 주면 선택창 없이 바로 받는다.
+
 서버가 한 조건에 최대 2,000건만 돌려주므로, 법정동 코드 범위로 조회하고
 2,000건이 넘는 범위는 코드 앞자리를 한 자리씩 늘려 자동으로 나눠 받는다.
 전국 \code{"ri"} 는 10분 이상 걸릴 수 있다.
@@ -64,6 +71,7 @@ them as an \code{sf} object. \code{admb_vworld_shp()} also writes a shapefile.
 \examples{
 \dontrun{
 admb_set_vworld_key("MY_VWORLD_KEY")
+x <- admb_vworld()            # 선택창으로 고르기
 sido <- admb_vworld("sido")
 seoul_emd <- admb_vworld("emd", code = "11")
 admb_vworld_shp("sigungu", "boundary/sigungu.shp")

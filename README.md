@@ -7,7 +7,7 @@
 
 | 함수 | 출처 | 경계 | 인증키 |
 | --- | --- | --- | --- |
-| `admb_vworld()`, `admb_vworld_shp()` | 브이월드 WFS — 공공데이터포털 [15059008](https://www.data.go.kr/data/15059008/openapi.do) | 법정구역: 시도·시군구·읍면동·리 | 브이월드 인증키 |
+| `admb_vworld()`, `admb_vworld_shp()`, `admb_codes()` | 브이월드 WFS — 공공데이터포털 [15059008](https://www.data.go.kr/data/15059008/openapi.do) | 법정구역: 시도·시군구·읍면동·리 | 브이월드 인증키 |
 | `admb_sgis_download()` | 공공데이터포털 파일데이터 [15129688](https://www.data.go.kr/data/15129688/fileData.do) (SGIS) | 행정구역(행정동 기준) | 불필요 |
 
 실거래가처럼 **법정동 코드**를 쓰는 자료와 결합하려면 브이월드 쪽을,
@@ -27,16 +27,19 @@ library(admboundary.molit)
 # 1) 브이월드 인증키 등록 (세션 단위)
 admb_set_vworld_key("MY_VWORLD_KEY")
 
-# 2) sf 객체로 받기
+# 2) 선택창으로 골라 받기
+x <- admb_vworld()
+
+# 3) 또는 바로 sf 객체로 받기
 sido <- admb_vworld("sido")       # 시도
 sgg  <- admb_vworld("sigungu")    # 시군구
 emd  <- admb_vworld("emd")        # 읍면동
 ri   <- admb_vworld("ri")         # 리 (전국은 10분 이상)
 
-# 3) 바로 SHP 로 저장
+# 4) 바로 SHP 로 저장
 admb_vworld_shp("sigungu", "boundary/sigungu.shp")
 
-# 4) 일부 지역만: 법정동 코드 앞자리
+# 5) 일부 지역만: 법정동 코드 앞자리 (admb_codes() 로 조회)
 seoul_emd <- admb_vworld("emd", code = "11")      # 서울 읍면동
 admb_vworld_shp("ri", "boundary/ri_47.shp", code = "47")  # 경북 리
 ```
@@ -45,6 +48,31 @@ admb_vworld_shp("ri", "boundary/ri_47.shp", code = "47")  # 경북 리
 발급받으면 됩니다. 세션마다 등록하지 않으려면 `~/.Renviron` 에
 `ADMB_VWORLD_KEY=...` 한 줄을 넣으세요 (`usethis::edit_r_environ()`).
 공유하는 스크립트에는 키를 적지 마세요.
+
+## 선택창 4단계
+
+`admb_vworld()` 를 인자 없이 실행하면 다음을 차례로 묻습니다. 어느 단계에서든
+`0` 을 넣으면 취소됩니다.
+
+1. **경계 종류** — 시도 / 시군구 / 읍면동 / 리
+2. **시·도** — 전국 또는 시·도 하나
+3. **시·군·구** — 고른 시·도 전체 또는 시·군·구 하나 (시도 경계는 건너뜀)
+4. **저장 방식** — R 객체(sf)로만 받기 또는 SHP 파일로도 저장
+   (경로를 비우면 `emd_41113.shp` 같은 기본 이름)
+
+```
+── [ 1 / 4 ] 경계 종류 ──
+   1: 시도 경계  (sido)
+   2: 시군구 경계  (sigungu)
+   3: 읍면동 경계  (emd)
+   4: 리 경계  (ri)
+   0: 취소
+받을 경계 종류를 선택하세요 (1-4, 0=취소):
+```
+
+스크립트처럼 선택창 없이 돌리려면 `admb_vworld("emd", code = "41113")` 처럼
+`level` 을 직접 주세요. 코드는 `admb_codes("sigungu", code = "41")` 로
+찾을 수 있습니다.
 
 ## 결과 컬럼
 

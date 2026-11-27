@@ -1,7 +1,7 @@
 Package: admboundary.molit
 Type: Package
 Title: Download Korean Administrative Boundaries as Shapefiles
-Version: 0.1.0
+Version: 0.2.0
 Authors@R:
     person("Derick S.", "Park", email = "soonmai@gmail.com",
            role = c("aut", "cre"))

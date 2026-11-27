@@ -74,3 +74,19 @@ test_that("중복 코드는 한 번만 남긴다", {
   res <- admb_vworld("emd", key = "k", quiet = TRUE, pause = 0)
   expect_equal(res$emd_cd, c("11110101", "11110102"))
 })
+
+test_that("admb_codes 는 코드·이름 표를 만든다", {
+  local_mocked_bindings(.vw_call = function(lay, prefix, count, start, ..., props = NULL) {
+    expect_equal(props, c("sig_cd", "sig_kor_nm", "full_nm"))
+    '{"type":"FeatureCollection","features":[{"type":"Feature","id":"a.2","geometry":null,"properties":{"sig_cd":"41113","sig_kor_nm":"\uad8c\uc120\uad6c","full_nm":"g2"}},{"type":"Feature","id":"a.1","geometry":null,"properties":{"sig_cd":"41111","sig_kor_nm":"\uc7a5\uc548\uad6c","full_nm":"g1"}}],"numberMatched":2}'
+  })
+  x <- admb_codes("sigungu", code = "41", key = "k", pause = 0)
+  expect_equal(names(x), c("code", "name", "full_name"))
+  expect_equal(x$code, c("41111", "41113"))
+  expect_equal(x$full_name, c("g1", "g2"))
+})
+
+test_that("admb_codes 결과가 없으면 0행", {
+  local_mocked_bindings(.vw_call = function(...) '{"features":[],"numberMatched":0}')
+  expect_equal(nrow(admb_codes("ri", code = "11", key = "k")), 0L)
+})

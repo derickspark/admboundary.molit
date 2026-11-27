@@ -1,3 +1,11 @@
+# admboundary.molit 0.2.0
+
+* **선택창** — `admb_vworld()` 를 `level` 없이 실행하면 경계 종류 → 시·도 →
+  시·군·구 → 저장 방식을 차례로 고르는 선택창이 뜬다. `level` 을 주면
+  전처럼 바로 받는다.
+* `admb_codes()` — 도형 없이 구역 코드와 이름만 빠르게 조회.
+* `admb_vworld()` 의 `level` 기본값이 `"sido"` 에서 `NULL`(선택창)로 바뀜.
+
 # admboundary.molit 0.1.0
 
 * 첫 릴리스. 스크립트 `행정구역_shp_다운로드.R` 를 패키지로 옮김.
