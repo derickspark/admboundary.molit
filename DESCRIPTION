@@ -1,0 +1,33 @@
+Package: admboundary.molit
+Type: Package
+Title: Download Korean Administrative Boundaries as Shapefiles
+Version: 0.1.0
+Authors@R:
+    person("Derick S.", "Park", email = "soonmai@gmail.com",
+           role = c("aut", "cre"))
+Description: Downloads Korean administrative boundary polygons and saves
+    them as shapefiles. Legal-district boundaries (시도, 시군구, 읍면동, 리)
+    come from the Ministry of Land, Infrastructure and Transport (MOLIT)
+    'VWorld' WFS service, which is listed on the public data portal as
+    dataset 15059008 and needs a 'VWorld' API key. The service returns at
+    most 2,000 features per query, so requests are split automatically by
+    district-code range. Administrative-district (행정동) boundaries come
+    from the 'SGIS' boundary file on the public data portal (dataset
+    15129688), which needs no key.
+License: MIT + file LICENSE
+URL: https://github.com/derickspark/admboundary.molit
+BugReports: https://github.com/derickspark/admboundary.molit/issues
+Encoding: UTF-8
+LazyData: false
+Depends:
+    R (>= 4.1)
+Imports:
+    httr2 (>= 1.0.0),
+    jsonlite,
+    sf
+Suggests:
+    testthat (>= 3.0.0),
+    withr
+Config/testthat/edition: 3
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
